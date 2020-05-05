@@ -1,0 +1,125 @@
+<meta charset="utf-8">
+
+
+<head>
+	<link rel="stylesheet" type="text/css" href="layout.css">
+</head>
+
+<body>
+	<!-- <svg width="1200" height="500"></svg> -->
+	<!-- <svg class="chart"></svg> -->
+	<div id="chartId"></div>
+</body>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+
+<script src="js/svgBuilder.js"></script>
+<script src="js/ruler.js"></script>
+<script src="js/dataset.js"></script>
+<script>
+
+
+// View
+var scale = d3.scaleLinear()
+                    .domain([1, d3.max(dataset, function(d) { return d.r; })])
+					.range([1, 50]);
+
+var circles = svg.selectAll('circle')
+	.data(dataset)
+	.enter()
+	.append('circle');
+
+circles.attr("cx", function(d, i) {
+			return dataset[i].cx
+		})
+       .attr("cy", function(d, i) {
+			return dataset[i].cy
+		})
+       .attr("r", function(d) {
+            return scale(d.r);
+       }) 
+       .attr('fill', function(d, i) {
+			return dataset[i].rgba;
+		})
+       .attr('class', function(d, i) {
+       		return 'c' + i;
+       })
+       .each(bounceMe)  
+
+function bounceMe() {
+
+	var circle = d3.select(this); 
+   	circle.transition() 
+		.ease(d3.easeBounce)
+		.duration(function(d) {
+			return d.r * 9.8 * 5;
+		})
+		.attr("cy", function(d) {
+			return height - scale(d.r);
+		}) 
+}
+
+</script>
+
+
+<script>
+/*
+function bounceForever(t) {
+
+	var circle = d3.select(this); 
+
+  	(function repeat() {
+    circle.transition() 
+    		.duration(function(d) {
+				return d.r * 9.8 * 5;
+			})
+			.ease(d3.easeBounce)
+			.attr("cy", function(d) {
+				return h - scale(d.r);
+			}) 
+
+      		.transition()
+    		.duration(function(d) {
+				return d.r * 9.8 * 5;
+			})
+			.ease(d3.easeBounce)
+      		.attr("cy", function(d) {
+				return scale(d.r);
+			}) 
+        	.on("end", function(d) {
+        		repeat()			
+			});
+			
+
+ 	 })();
+
+}
+*/
+
+// var lbl = svg.selectAll('text')
+// 	.data(dataset)
+// 	.enter()
+// 	.append('text')
+ 
+// lbl.attr("x", function(d, i) {
+// 			return dataset[i].cx - scale(d.r) / 2
+// 		})
+//     .attr("y", function(d, i) {
+// 			return dataset[i].cy + scale(d.r) / 2
+// 	})
+// 	.attr('font-size', function(d) {
+// 			return Math.floor(scale(d.r));
+// 		})
+// 	.text(function(d) {
+// 			return Math.floor(scale(d.r));
+// 		})
+ 
+// svg.selectAll('text').transition()
+//     .duration(function(d) {
+// 			return d.r * 9.8;
+// 		})
+//     .ease(d3.easeBounce)
+//     .attr("y", function(d, i) {
+// 			return h - scale(d.r);
+// 		})
+
+</script>
